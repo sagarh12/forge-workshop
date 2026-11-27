@@ -1,44 +1,41 @@
-# forge-workshop
+# Forge Workshop 01: Can AI Tell How You Feel?
 
-AI Ignite at York — Forge Track, Workshop 01: **Emotion Detection** (BiLSTM vs BERT vs LLMs on MELD)
+**AI Ignite at York** | Friday 27 November 2026, 5:30 to 7:30 PM | WSC 101
 
-Friday 27 November 2026, 5:30 to 7:30 PM, WSC 101.
+We teach computers to read emotions in lines from *Friends* (the MELD dataset), three ways: train a small model (**BiLSTM**), fine-tune a big one (**BERT**), and simply ask an AI chatbot (**Gemini**). Then we score them all the same way and see who wins.
 
-## Start here
+## Open the notebooks, in order
 
-Open the base notebook in Colab and run it top to bottom:
+| Part | Who | What it does | Open |
+|---|---|---|---|
+| A | Sagar | Loads the dataset and the official split | [Open in Colab](https://colab.research.google.com/github/sagarh12/forge-workshop/blob/main/forge_workshop_base.ipynb) |
+| B1 | Ali | Trains BiLSTM and BERT (needs a T4 GPU) | [Open in Colab](https://colab.research.google.com/github/sagarh12/forge-workshop/blob/main/notebooks/ali/Ali_1_Train_Models.ipynb) |
+| B2 | Ali | Shows the BiLSTM and BERT results | [Open in Colab](https://colab.research.google.com/github/sagarh12/forge-workshop/blob/main/notebooks/ali/Ali_2_See_Results.ipynb) |
+| C | Davit | Asks Gemini (needs your free Gemini key) | [Open in Colab](https://colab.research.google.com/github/sagarh12/forge-workshop/blob/main/notebooks/davit/davit_llm_prompting.ipynb) |
+| D | Sheheryar | The scoreboard: every model, same test lines | [Open in Colab](https://colab.research.google.com/github/sagarh12/forge-workshop/blob/main/notebooks/sheheryar/evaluation.ipynb) |
 
-[forge_workshop_base.ipynb](https://colab.research.google.com/github/sagarh12/forge-workshop/blob/main/forge_workshop_base.ipynb)
+In every notebook: **Runtime > Run all**. If Colab says "This notebook was not authored by Google", click **Run anyway**.
 
-## Repo layout
+Every part has saved results, so if something breaks you can still move on to the next part.
+
+## What's in this repo
 
 ```
-data/raw/               original MELD files (do not modify)
-data/processed/         meld_clean.csv, meld_context.csv (Mehwish)
-notebooks/davit/        zero-shot, few-shot, data balancing
-notebooks/ali/          fine-tuning: BiLSTM and BERT
-notebooks/sheheryar/    evaluation pipeline and scoreboard
-outputs/predictions/    one CSV per model
-outputs/reports/        classification reports
-outputs/figures/        charts and confusion matrices
-slides/                 decks
+forge_workshop_base.ipynb   Part A (Sagar). Stays here: the other notebooks rely on it
+data/processed/             the cleaned MELD dataset (Mehwish)
+notebooks/ali/              Part B1 and B2 (Ali)
+notebooks/davit/            Part C (Davit)
+notebooks/sheheryar/        Part D, the scoreboard (Sheheryar)
+outputs/predictions/        saved results, one file per model (Ali and Davit)
+outputs/figures/            charts and training logs (Ali and Davit)
+tests/                      automatic checks for the scoreboard (Sheheryar)
 ```
 
-## Rules for every contributor
+Each folder has a short README that says who made which file.
 
-1. **Use MELD's official train / dev / test split.** Never call `train_test_split`. The base notebook creates `X_train`, `X_test`, `y_train`, `y_test` for you.
-2. **Save predictions with `save_predictions()`** from the base notebook. Columns: `utterance`, `true_label`, `predicted_label`, `model_name`.
-3. **Model names are fixed:** `bilstm`, `bert_finetuned`, `zero_shot`, `few_shot`, `balanced_few_shot`.
-4. **Labels are lowercase:** `anger`, `disgust`, `fear`, `joy`, `neutral`, `sadness`, `surprise`.
-5. **Nothing heavy runs live.** Training and full test-set inference are pre-computed and committed.
-6. **Your own Gemini key, never committed.** Each attendee creates a free key in Google AI Studio. Paste it at the prompt; never put it in a cell or a file.
-7. **LLM calls are batched** (20 utterances per request) and live runs are capped at 100 rows.
+## Rules for contributors
 
-## Data files (committed by Mehwish)
-
-`data/processed/meld_clean.csv` — columns: `utterance`, `label`, `dialogue_id`, `utterance_id`, `speaker`, `split`.
-`data/processed/meld_context.csv` — same, plus `context` (the previous three utterances of the dialogue).
-
-## Contact
-
-Sagar — sagarh@my.yorku.ca
+1. Use MELD's **official train / dev / test split**. The base notebook creates it for you.
+2. Save results with `save_predictions()` (Step 7 of the base notebook), so the scoreboard can read them.
+3. Everyone uses **their own free Gemini key** from [Google AI Studio](https://aistudio.google.com/apikey). Never put a key in a notebook or commit it.
+4. Keep file names and folders as they are. The notebooks look for files in these exact places.
